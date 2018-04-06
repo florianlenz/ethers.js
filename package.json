@@ -19,6 +19,7 @@
     "scrypt-js": "2.0.3",
     "setimmediate": "1.0.4",
     "uuid": "2.0.1",
+    "ws": "^5.1.1",
     "xmlhttprequest": "1.8.0"
   },
   "devDependencies": {
