@@ -46,8 +46,12 @@ function WebSocketProvider(url, network) {
     utils.defineProperty(this, 'webSocketPromise', new Promise(function (res, rej) {
         var ws = new WebSocket(url);
 
-        ws.on('error', rej);
-        ws.on('close', rej);
+        ws.on('error', function (err) {
+            throw err;
+        });
+        ws.on('close', function () {
+            throw new Error("closed");
+        });
         ws.on('open', function () {
             res(ws)
         });
