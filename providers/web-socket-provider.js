@@ -43,25 +43,36 @@ function WebSocketProvider(url, network) {
     Provider.call(this, network);
 
     utils.defineProperty(this, 'eventEmitter', new EventEmitter());
-    utils.defineProperty(this, 'webSocketPromise', new Promise(function (res, rej) {
-        var ws = new WebSocket(url);
 
-        ws.on('error', function (err) {
-            throw err;
-        });
-        ws.on('close', function () {
-            throw new Error("closed");
-        });
-        ws.on('open', function () {
-            res(ws)
-        });
 
-        ws.on('message', function (message) {
-            var msg = JSON.parse(message);
-            self.eventEmitter.emit(msg.id, message);
-        });
+    function webSocket() {
+        return new Promise(function (res, rej) {
 
-    }));
+            var ws = new WebSocket(url);
+
+            ws.on('error', function (err) {
+                throw err;
+            });
+            ws.on('close', function () {
+
+                console.log("closed websocket - try to reconnect");
+                WebSocketProvider.prototype.webSocketPromise = webSocket();
+
+            });
+
+            ws.on('open', function () {
+                res(ws)
+            });
+
+            ws.on('message', function (message) {
+                var msg = JSON.parse(message);
+                self.eventEmitter.emit(msg.id, message);
+            });
+
+        })
+    }
+
+    WebSocketProvider.prototype.webSocketPromise = webSocket();
 
 }
 Provider.inherits(WebSocketProvider);
