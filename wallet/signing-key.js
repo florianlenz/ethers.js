@@ -26,7 +26,7 @@ var utils = (function() {
 function SigningKey(privateKey) {
     if (!(this instanceof SigningKey)) { throw new Error('missing new'); }
 
-    privateKey = utils.arrayify(privateKey);
+    privateKey = Buffer.from(privateKey, 'hex')
     if (privateKey.length !== 32) {
         throw new Error('invalid private key');
     }
