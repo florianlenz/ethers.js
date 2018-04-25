@@ -40,7 +40,7 @@ function WebSocketProvider(url, network) {
         }
     }
 
-    Provider.call(this, network);
+    Provider.call(this, url, network);
 
     utils.defineProperty(this, 'eventEmitter', new EventEmitter());
 
@@ -61,6 +61,7 @@ function WebSocketProvider(url, network) {
             });
 
             ws.on('open', function () {
+                console.log("connected");
                 res(ws)
             });
 
@@ -97,7 +98,6 @@ utils.defineProperty(WebSocketProvider.prototype, 'fetchJSON', function (webSock
                 };
 
                 self.eventEmitter.on(json.id, eventHandler);
-
                 webSocket.send(JSON.stringify(json))
             })
             .catch(rej);
